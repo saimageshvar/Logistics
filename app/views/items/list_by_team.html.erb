@@ -1,0 +1,34 @@
+<% if params[:team_id] == nil %>
+
+  <p> Teams List </p>
+  <% @teams.each do |team| %>
+    <%= link_to team.team_name, '/items/list_by_team?team_id=' + String(team.id) %>
+    <br>
+  <% end %>
+
+<% else %>
+
+  <p> Team: <%= @team.team_name %> </p>
+
+  <% if @requests.empty? %>
+    <p> No requests yet! </p>
+  <% else %>
+    <table>
+      <tr>
+        <th> Item Name </th>
+        <th> Requested </th>
+        <th> Approved </th>
+        <th> To Approve</th>
+      </tr>
+    <% @requests.each do |request| %>
+      <tr>
+        <td> <%= request.item.item_name %> </td>
+        <td> <%= request.requested %> </td>
+        <td> <%= request.approved %> </td>
+        <td> <%= request.requested - request.approved %> </td>
+      </tr>
+    <% end %>
+    </table>
+  <% end %>
+
+<% end %>

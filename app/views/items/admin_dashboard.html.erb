@@ -1,0 +1,86 @@
+<% if session[:user_id] %>
+
+  <h2> Admin dashboard </h2>
+  <%= link_to "Log out", :controller => 'users', :action => 'logout' %>
+
+  <h4>Create Subject</h4>
+
+  <%
+    # form to add new item
+  %>
+
+  <%= form_tag(:action => 'create') do %>
+
+    <table>
+      <tr>
+        <th>Item Name</th>
+        <td><%= text_field_tag('item_name', params[:item_name]) %></td>
+      </tr>
+      <tr>
+        <th>Item Total</th>
+        <td><%= number_field_tag('item_total', params[:item_total]) %></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><%= submit_tag("Create Item") %></td>
+      </tr>
+    </table>
+
+  <% end %>
+
+  <%
+    # List all items. total and requests.
+    # Facility to add and edit items
+  %>
+
+  <table>
+    <% if @items.empty? %>
+      <p> No items in list. </p>
+    <% elsif %>
+    <tr>
+      <th> Item Name </th>
+      <th> Total </th>
+      <th> Requested </th>
+      <th> Approved </th>
+      <th> Remaining </th>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+    </tr>
+    <% @items.each do |item| %>
+    <tr>
+      <td> <%= link_to item.item_name, '/items/list_by_item?item_id=' + String(item.id) %> </td>
+      <td> <%= item.item_total %> </td>
+      <td> <%= item.item_requested %> </td>
+      <td> <%= item.item_approved %> </td>
+      <td> <%= item.item_remaining %> </td>
+      <td>
+        <%= form_tag(:action => 'total') do %>
+          <%= number_field_tag('number', params[:number], :placeholder => '+ Number') %>
+          <%= hidden_field_tag('item_id', params[:item_id] = item.id) %>
+          <%= hidden_field_tag('task', params[:task] = 'plus') %>
+          <%= submit_tag('Increase Total') %>
+        <% end %>
+      </td>
+      <td>
+        <%= form_tag(:action => 'total') do %>
+          <%= number_field_tag('number', params[:number], :placeholder => '- Number') %>
+          <%= hidden_field_tag('item_id', params[:item_id] = item.id) %>
+          <%= hidden_field_tag('task', params[:task] = 'minus') %>
+          <%= submit_tag('Reduce Total') %>
+        <% end %>
+      </td>
+      <td> <%= link_to "Delete", :controller => 'items', :action => 'destroy', :id => item.id %> </td>
+    </tr>
+    <% end %>
+  </table>
+  <% end %>
+  <p></p>
+  <p></p>
+  <br>
+  <%= link_to "List by Team", '/items/list_by_team' %>
+<% elsif %>
+
+  <p> Please login from home page </p>
+
+<% end %>

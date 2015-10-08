@@ -1,0 +1,35 @@
+<%  if session[:user_id]
+    # if session exist then, display the page
+%>
+
+  <%= flash[:notice] %>
+  <br>
+  <h2> User dashboard </h2>
+  <%= link_to "Log out", :controller => 'users', :action => 'logout' %>
+  <%
+    # List all the items requested and approved for the
+    # team for which the user belongs to
+  %>
+  <table>
+    <tr>
+      <th> Item </th>
+      <th> Requested </th>
+      <th> Approved </th>
+      <th> Total </th>
+    </tr>
+    <% @requests.each do |request| %>
+        <tr>
+          <% item = Item.where(:id => request.item_id) %>
+          <th> <%= item.item_name %> </th>
+          <th> <%= request.requested %> </th>
+          <th> <%= request.approved %> </th>
+          <th> <%= item.item_total %> </th>
+        </tr>
+    <% end %>
+  </table>
+
+<%  elsif
+    # if session doesnot exist, tell to login from
+%>
+  <p> Please login from home page </p>
+<% end %>

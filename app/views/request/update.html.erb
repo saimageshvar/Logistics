@@ -1,0 +1,7 @@
+<h1>Items#update</h1>
+	<%= form_tag(:action => 'add'  , :item => params[:item]) do %>	
+		<%= params[:item] %>
+		<%= number_field_tag(:count , params[:value]) %>
+		<% params[:value]=0 %>
+		<%= button_to "update" , {:action => "add" , :item => params[:item] } %>
+	<% end %>

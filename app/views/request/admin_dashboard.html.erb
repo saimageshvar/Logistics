@@ -1,0 +1,16 @@
+<% if session[:user_id] %>
+
+  <%= flash[:notice] %>
+  <br>
+  <h2> Admin dashboard </h2>
+  <%= link_to "Log out", :controller => 'users', :action => 'logout' %>
+
+  <%  # List all items. total and requests.
+      # Facility to add and edit items
+  %>
+
+<% elsif %>
+
+  <p> Please login from home page </p>
+
+<% end %>

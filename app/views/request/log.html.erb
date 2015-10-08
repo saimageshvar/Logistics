@@ -1,0 +1,30 @@
+<table style="border:2px solid black;text-align:center;font-size:20px" border="1">
+	<tr>
+		<th> Request Id </th>
+		<th> Item id </th>
+		<th> Item name </th>
+		<th> Requested </th>
+		<th> Approved </th>
+		<th> Requested at </th>
+
+	</tr>
+<% for l in @l %>
+	<% if l.requested.to_i > 0 %>
+
+	<tr>
+		<td><%= l.id %></td>
+		<td><%= l.item_id %></td>
+		<td><%= @ary.shift %></td>
+		<td><%= l.requested %></td>
+		<td><%= l.approved %></td>
+		<td><%= l.created_at %> </td>
+
+
+
+	</tr>
+	<% end %>
+
+<% end %>
+</table>
+<br/>
+<%= button_to "< back" , {:action => "user_dashboard"} %>

@@ -1,0 +1,46 @@
+
+  <p> Item: <%= @item.item_name %> </p>
+  <p> Status: </p>
+  <p> Total: <%= @item.item_total %> </p>
+  <p> Remaining: <%= @item.item_remaining %> </p>
+
+  <% if @requests.empty? %>
+    <p> No requests yet! </p>
+  <% else %>
+    <table>
+      <tr>
+        <th> Team Name </th>
+        <th> Requested </th>
+        <th> Approved </th>
+        <th> To Approve</th>
+        <th> Approve </th>
+        <th> Return </th>
+      </tr>
+    <% @requests.each do |request| %>
+      <tr>
+        <td> <%= request.team.team_name %> </td>
+        <td> <%= request.requested %> </td>
+        <td> <%= request.approved %> </td>
+        <td> <%= request.requested - request.approved %> </td>
+        <td>
+          <%= form_tag(:action => 'approve') do %>
+            <%= number_field_tag('toApprove', params[:toApprove], :placeholder => 'Number to approve') %>
+            <%= hidden_field_tag('team_id', params[:team_id] = request.team_id) %>
+            <%= hidden_field_tag('item_id', params[:item_id] = request.item_id) %>
+            <%= hidden_field_tag('request_id', params[:request_id] = request.id) %>
+            <%= submit_tag('Approve') %>
+          <% end %>
+        </td>
+        <td>
+          <%= form_tag(:action => 'return') do %>
+            <%= number_field_tag('toReturn', params[:toReturn], :placeholder => 'Number to return') %>
+            <%= hidden_field_tag('team_id', params[:team_id] = request.team_id) %>
+            <%= hidden_field_tag('item_id', params[:item_id] = request.item_id) %>
+            <%= hidden_field_tag('request_id', params[:request_id] = request.id) %>
+            <%= submit_tag('Return') %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+  <% end %>

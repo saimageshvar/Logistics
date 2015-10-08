@@ -1,0 +1,14 @@
+<h1>Request#create</h1>
+<% for item in @item %>
+	<%= form_tag(:action => 'add'  , :item => item.item_name) do %>
+		<%= item.item_name %>
+		<%= number_field_tag(:count , params[:val]) %>
+		<% params[:val]='' %>
+		<%= button_to "add" , {:action => "add" , :item => item.item_name } %>
+	<% end %>
+	<br/>
+<% end %>
+
+<br/>
+<br/>
+<%= button_to "< back" , {:action => "user_dashboard"} %>

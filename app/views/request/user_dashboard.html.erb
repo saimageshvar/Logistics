@@ -1,0 +1,55 @@
+<%  if session[:user_id]
+    # if session exist then, display the page
+%>
+
+
+<script type="text/javascript">
+	function displayunicode(e){
+    var unicode=e.keyCode? e.keyCode : e.charCode
+	var actualkey=String.formCharCode(unicode)
+    alert(actualkey)
+}
+</script>
+
+
+  <p align="right">
+
+  <%= link_to "Status", :controller => 'request', :action => 'display' %>
+  <%= link_to "Log", :controller => 'request', :action => 'log' %>
+  <%= link_to "Log out", :controller => 'users', :action => 'logout' %>
+
+  </p>
+  <br>
+  <h2> User dashboard </h2>
+   <%= form_tag(:action => 'create') do %>
+  <table>
+    <tr>
+      <td><%= label_tag(:item_name) %></td>
+      <td><%= text_field_tag(:item_name) %></td>
+	  <td><%= submit_tag("search") %></td>
+    </tr>
+  </table>
+  <% end %>
+<br/>
+	<% for item in @item %>
+	<table>
+	<tr>
+		<td> <%= item.item_name %> </td>
+		<td> <%= item.count %> </td>
+		<td> <%= link_to "edit", :controller => 'request', :action => 'update' , :item => item.item_name , :value => item.count %> </td>
+		<td> <%= link_to "remove", :controller => 'request', :action => 'destroy' , :item => item.item_name , :value => item.count %> </td>
+	</tr>
+	</table>
+	<% end %>
+	<br/>
+
+ 	<%= button_to "submit" , {:action => "submit"} %>
+
+
+
+
+<%  elsif
+    # if session doesnot exist, tell to login from home page
+%>
+  <p> Please login from home page </p>
+<% end %>
