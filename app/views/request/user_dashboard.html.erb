@@ -2,6 +2,8 @@
     # if session exist then, display the page
 %>
 
+<% if @req_item.empty? %>
+
 
 <script type="text/javascript">
 	function displayunicode(e){
@@ -46,7 +48,11 @@
  	<%= button_to "submit" , {:action => "submit"} %>
 
 
-
+<% else %>
+<script type="text/javascript">
+    window.location.href="/request/display"  // put your correct path in a string here
+  </script>
+<% end %>
 
 <%  elsif
     # if session doesnot exist, tell to login from home page

@@ -143,6 +143,7 @@ class RequestController < ApplicationController
 
     #flash[:id]=user[:team_id]
     @item=TempReq.where("team_id = #{session[:team_id]}")
+    @req_item=Request.where("team_id = #{session[:team_id]}")
 
 
 
