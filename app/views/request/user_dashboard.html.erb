@@ -23,15 +23,34 @@
   </p>
   <br>
   <h2> User dashboard </h2>
-   <%= form_tag(:action => 'create') do %>
+   <%= form_tag(:action => 'user_dashboard') do %>
   <table>
     <tr>
       <td><%= label_tag(:item_name) %></td>
-      <td><%= text_field_tag(:item_name) %></td>
+      <td><%= text_field_tag(:item_name ,nil, :required => true) %></td>
 	  <td><%= submit_tag("search") %></td>
     </tr>
   </table>
   <% end %>
+	<br/>
+<% if !@itemList.nil? %>
+	<% for itemList in @itemList %>
+		<%= form_tag(:action => 'add'  , :item => itemList.item_name) do %>
+			<%= itemList.item_name %>
+			<%= number_field_tag(:count , params[:val]) %>
+			<% params[:val]='' %>
+			<%= button_to "add" , {:action => "add" , :item => itemList.item_name } %>
+		<% end %>
+		<br/>
+	<% end %>
+<% end %>
+
+	<br/>
+	<br/>
+	----------------------------------------------------------------------------------------------------
+	<p><h2>In the cart</h2></p>
+
+
 <br/>
 	<% for item in @item %>
 	<table>

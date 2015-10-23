@@ -1,3 +1,8 @@
+<p align="right">
+<%= link_to "Log out", :controller => 'users', :action => 'logout' %>
+</p>
+
+
 <table style="border:2px solid black;text-align:center;font-size:20px" border="1">
 	<tr>
 		<th> Request Id </th>
@@ -5,26 +10,24 @@
 		<th> Item name </th>
 		<th> Requested </th>
 		<th> Approved </th>
-		
+
 	</tr>
 <% for req in @req %>
 	<% if req.requested.to_i > 0 %>
-	
+
 	<tr>
 		<td><%= req.id %></td>
 		<td><%= req.item_id %></td>
 		<td><%= @ary.shift %></td>
 		<td><%= req.requested %></td>
 		<td><%= req.approved %></td>
-		<td style="border:0"> <%= link_to "delete" , {:action => "late_destroy" , :item_id => req.item_id , :req_id =>req.id} %> </td>
+		<!--<td style="border:0"> <%= link_to "delete" , {:action => "late_destroy" , :item_id => req.item_id , :req_id =>req.id} %> </td>-->
 
 
 	</tr>
 	<% end %>
-	
+
 <% end %>
 </table>
 <br/>
-<%= button_to "< back" , {:action => "user_dashboard"} %>
-
-	
+<!--<%= button_to "< back" , {:action => "user_dashboard"} %>-->
