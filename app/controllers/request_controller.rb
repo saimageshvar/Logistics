@@ -144,11 +144,9 @@ class RequestController < ApplicationController
     #flash[:id]=user[:team_id]
     @item=TempReq.where("team_id = #{session[:team_id]}")
     @req_item=Request.where("team_id = #{session[:team_id]}")
-    if !params[:item_name].nil?
+    if !params[:item_name].nil? && !params[:item_name].blank?
       @itemList=Item.where("item_name LIKE '#{params[:item_name]}%'")
     end
-
-
 
 
   end

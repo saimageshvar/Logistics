@@ -27,12 +27,22 @@
   <table>
     <tr>
       <td><%= label_tag(:item_name) %></td>
-      <td><%= text_field_tag(:item_name ,nil, :required => true) %></td>
-	  <td><%= submit_tag("search") %></td>
+      <td><%= text_field_tag(:item_name ,params[:item_name], :required => true , :autofocus => true , :onfocus => "this.value = this.value" ,:onkeyup => 'func(this.value);' ) %></td>
+
+	  <!--<td><%= submit_tag("search") %></td>-->
     </tr>
   </table>
   <% end %>
+
+	<script type="text/javascript">
+	function func(name)
+	{
+	    window.location.href="/request/user_dashboard?item_name="+name
+	}
+	</script>
+
 	<br/>
+
 <% if !@itemList.nil? %>
 	<% for itemList in @itemList %>
 		<%= form_tag(:action => 'add'  , :item => itemList.item_name) do %>
@@ -43,6 +53,7 @@
 		<% end %>
 		<br/>
 	<% end %>
+
 <% end %>
 
 	<br/>
