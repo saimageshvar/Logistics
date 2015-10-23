@@ -99,7 +99,7 @@ class ItemsController < ApplicationController
     @request.approved = @request.approved - Integer(params[:toReturn])
     @item.item_remaining = @item.item_remaining + Integer(params[:toReturn])
     @item.item_approved = @item.item_approved - Integer(params[:toReturn])
-	@item.item_requested = @item.item_requested - Integer(params[:toReturn])
+	  @item.item_requested = @item.item_requested - Integer(params[:toReturn])
     #@log.requested = @request.requested
     #@log.approved = @request.approved
     if @request.approved == @request.requested
@@ -112,6 +112,13 @@ class ItemsController < ApplicationController
     @log.save
     @request.save
     @item.save
+  end
+
+  def allot
+    @num = params[:num]
+    @item = Item.find(params[:item_id])
+    @team = Team.find(params[:team_id])
+    if(@num > @team.item)
   end
 
   def total
