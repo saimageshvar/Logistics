@@ -49,8 +49,10 @@ class ItemsController < ApplicationController
   end
 
   def list_by_team
-    if params[:team_id] == nil
-      @teams = Team.all
+    if params[:team_id] == nil and params[:team_type] == nil
+      @temp = "Hello" # dummy parameter to use for if elif conditions
+    elsif params[:team_id] == nil and params[:team_type] != nil
+      @teams = Team.where(:team_type => params[:team_type])
     else
       @requests = Request.where(:team_id => params[:team_id])
       @team = Team.find(params[:team_id])
@@ -99,7 +101,7 @@ class ItemsController < ApplicationController
     @request.approved = @request.approved - Integer(params[:toReturn])
     @item.item_remaining = @item.item_remaining + Integer(params[:toReturn])
     @item.item_approved = @item.item_approved - Integer(params[:toReturn])
-	@item.item_requested = @item.item_requested - Integer(params[:toReturn])
+	  @item.item_requested = @item.item_requested - Integer(params[:toReturn])
     #@log.requested = @request.requested
     #@log.approved = @request.approved
     if @request.approved == @request.requested
@@ -110,6 +112,18 @@ class ItemsController < ApplicationController
       @log.status = 'Returned'
     end
     @log.save
+    @request.save
+    @item.save
+  end
+
+  def allot
+    @num = Integer(params[:num])
+    @item = Item.find_by_id(params[:item_id])
+    @request = Request.find_by_id(params[:request_id])
+    if @num >= @request.requested
+      @request.allotted = @num
+      @item.item_total_allotted = @item.item_total_allotted + @num
+    end
     @request.save
     @item.save
   end

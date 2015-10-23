@@ -6,7 +6,7 @@ class CreateItems < ActiveRecord::Migration
       t.integer :item_requested
       t.integer :item_approved
       t.integer :item_remaining
-
+      t.integer :item_total_allotted
       t.timestamps
     end
   end

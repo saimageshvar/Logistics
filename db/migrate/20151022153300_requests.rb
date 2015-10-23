@@ -6,7 +6,7 @@ class Requests < ActiveRecord::Migration
       t.integer :requested
       t.integer :allotted
       t.integer :approved
-
+      t.integer :allotted
       t.timestamps
     end
   end
