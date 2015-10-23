@@ -49,8 +49,10 @@ class ItemsController < ApplicationController
   end
 
   def list_by_team
-    if params[:team_id] == nil
-      @teams = Team.all
+    if params[:team_id] == nil and params[:team_type] == nil
+      @temp = "Hello" # dummy parameter to use for if elif conditions
+    elsif params[:team_id] == nil and params[:team_type] != nil
+      @teams = Team.where(:team_type => params[:team_type])
     else
       @requests = Request.where(:team_id => params[:team_id])
       @team = Team.find(params[:team_id])
@@ -115,10 +117,15 @@ class ItemsController < ApplicationController
   end
 
   def allot
-    @num = params[:num]
-    @item = Item.find(params[:item_id])
-    @team = Team.find(params[:team_id])
-    if(@num > @team.item)
+    @num = Integer(params[:num])
+    @item = Item.find_by_id(params[:item_id])
+    @request = Request.find_by_id(params[:request_id])
+    if @num >= @request.requested
+      @request.allotted = @num
+      @item.item_total_allotted = @item.item_total_allotted + @num
+    end
+    @request.save
+    @item.save
   end
 
   def total

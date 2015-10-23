@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151022180355) do
+ActiveRecord::Schema.define(version: 20151023145941) do
 
   create_table "items", force: true do |t|
     t.string   "item_name"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20151022180355) do
     t.integer  "item_id"
     t.integer  "requested"
     t.integer  "approved"
+    t.integer  "allotted"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -48,6 +49,7 @@ ActiveRecord::Schema.define(version: 20151022180355) do
     t.string   "team_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "team_type"
   end
 
   create_table "temp_reqs", force: true do |t|

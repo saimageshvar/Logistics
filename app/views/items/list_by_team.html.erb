@@ -1,5 +1,18 @@
-<% if params[:team_id] == nil %>
+<% if params[:team_id] == nil && params[:team_type] == nil %>
 
+  <p>Select Team Type:<p>
+  <%= link_to "Event", '/items/list_by_team?team_type=events' %>
+  <br>
+  <%= link_to "Workshop", '/items/list_by_team?team_type=workshop' %>
+  <br>
+
+<% elsif params[:team_id] == nil and params[:team_type] != nil %>
+
+  <% if params[:team_type] == "events" %>
+    Events
+  <% else %>
+    Workshop
+  <% end %>
   <p> Teams List </p>
   <% @teams.each do |team| %>
     <%= link_to team.team_name, '/items/list_by_team?team_id=' + String(team.id) %>
@@ -9,7 +22,7 @@
 <% else %>
 
   <p> Team: <%= @team.team_name %> </p>
-
+  <p> Team Type: <%= params[:team_type] %> </p>
   <% if @requests.empty? %>
     <p> No requests yet! </p>
   <% else %>
@@ -20,7 +33,7 @@
         <th> Approved </th>
         <th> To Approve</th>
         <th> Init. Allotted </th>
-        <th> Init. Allott </th>
+        <th> Allott </th>
         <th> Approve </th>
         <th> Return </th>
       </tr>
@@ -31,11 +44,16 @@
         <td> <%= request.approved %> </td>
         <td> <%= request.requested - request.approved %> </td>
         <td>
+          <% if request.allotted > 0 %>
+            <%= request.allotted %>
+          <% else %>
+            -
+          <% end %>
+        <td>
           <%= form_tag(:action => 'approve') do %>
             <%= number_field_tag('toApprove', params[:toApprove], :placeholder => 'Number to approve') %>
             <%= hidden_field_tag('team_id', params[:team_id] = request.team_id) %>
             <%= hidden_field_tag('item_id', params[:item_id] = request.item_id) %>
-            <%= hidden_field_tag('request_id', params[:request_id] = request.id) %>
             <%= submit_tag('Approve') %>
           <% end %>
         </td>
@@ -49,13 +67,13 @@
           <% end %>
         </td>
         <td>
-          <% if @request.item_allotted == 0 %>
-            <%= form_tag(:action => 'Allott') do %>
-              <%= number_field_tag('toReturn', params[:toAllot], :placeholder => 'Number to return') %>
+          <% if request.allotted < 1 %>
+            <%= form_tag(:action => 'allot') do %>
+              <%= number_field_tag('toReturn', params[:toAllot], :placeholder => 'Number to allot') %>
               <%= hidden_field_tag('team_id', params[:team_id] = request.team_id) %>
               <%= hidden_field_tag('item_id', params[:item_id] = request.item_id) %>
               <%= hidden_field_tag('request_id', params[:request_id] = request.id) %>
-              <%= submit_tag('Return') %>
+              <%= submit_tag('Allot') %>
             <% end %>
           <% end %>
         </td>

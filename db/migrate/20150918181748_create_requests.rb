@@ -5,7 +5,7 @@ class CreateRequests < ActiveRecord::Migration
       t.integer :item_id
       t.integer :requested
       t.integer :approved
-
+      t.integer :allotted
       t.timestamps
     end
   end
