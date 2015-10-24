@@ -33,9 +33,9 @@
         <th> Approved </th>
         <th> To Approve</th>
         <th> Init. Allotted </th>
-        <th> Allott </th>
         <th> Approve </th>
         <th> Return </th>
+        <th> Allott </th>
       </tr>
     <% @requests.each do |request| %>
       <tr>
@@ -44,11 +44,12 @@
         <td> <%= request.approved %> </td>
         <td> <%= request.requested - request.approved %> </td>
         <td>
-          <% if request.allotted > 0 %>
+          <% if request.allotted != 0 %>
             <%= request.allotted %>
           <% else %>
-            -
+            0
           <% end %>
+        </td>
         <td>
           <%= form_tag(:action => 'approve') do %>
             <%= number_field_tag('toApprove', params[:toApprove], :placeholder => 'Number to approve') %>

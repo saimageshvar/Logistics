@@ -97,19 +97,21 @@ class ItemsController < ApplicationController
     @item = Item.find_by_id(params[:item_id])
     @request = Request.find_by_id(params[:request_id])
     @log = Log.where( "request_id = #{params[:request_id]} and item_id = #{params[:item_id]} and team_id = #{params[:team_id]}").first;
-    @request.requested = @request.requested - Integer(params[:toReturn])
-    @request.approved = @request.approved - Integer(params[:toReturn])
-    @item.item_remaining = @item.item_remaining + Integer(params[:toReturn])
-    @item.item_approved = @item.item_approved - Integer(params[:toReturn])
-	  @item.item_requested = @item.item_requested - Integer(params[:toReturn])
-    #@log.requested = @request.requested
-    #@log.approved = @request.approved
-    if @request.approved == @request.requested
-      @log.status = 'Approved'
-    elsif @request.approved < @request.requested
-      @log.status = 'Pending'
-    elsif @request.requested == 0
-      @log.status = 'Returned'
+    if @request.item_remaining - Integer.params[:toReturn] >= 0
+      @request.requested = @request.requested - Integer(params[:toReturn])
+      @request.approved = @request.approved - Integer(params[:toReturn])
+      @item.item_remaining = @item.item_remaining + Integer(params[:toReturn])
+      @item.item_approved = @item.item_approved - Integer(params[:toReturn])
+  	  @item.item_requested = @item.item_requested - Integer(params[:toReturn])
+      #@log.requested = @request.requested
+      #@log.approved = @request.approved
+      if @request.approved == @request.requested
+        @log.status = 'Approved'
+      elsif @request.approved < @request.requested
+        @log.status = 'Pending'
+      elsif @request.requested == 0
+        @log.status = 'Returned'
+      end
     end
     @log.save
     @request.save
@@ -126,6 +128,7 @@ class ItemsController < ApplicationController
     end
     @request.save
     @item.save
+    redirect_to(:action => 'list_by_team')
   end
 
   def total
