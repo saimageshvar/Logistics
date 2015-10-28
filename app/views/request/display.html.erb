@@ -9,6 +9,7 @@
 		<th> Item id </th>
 		<th> Item name </th>
 		<th> Requested </th>
+		<th> Allotted </th>
 		<th> Approved </th>
 
 	</tr>
@@ -20,6 +21,7 @@
 		<td><%= req.item_id %></td>
 		<td><%= @ary.shift %></td>
 		<td><%= req.requested %></td>
+		<td><%= req.allotted %> </td>
 		<td><%= req.approved %></td>
 		<!--<td style="border:0"> <%= link_to "delete" , {:action => "late_destroy" , :item_id => req.item_id , :req_id =>req.id} %> </td>-->
 

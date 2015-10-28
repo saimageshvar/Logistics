@@ -13,8 +13,10 @@
         <th> Requested </th>
         <th> Approved </th>
         <th> To Approve</th>
+        <th> Init. Allotted </th>
         <th> Approve </th>
         <th> Return </th>
+        <th> Allot </th>
       </tr>
     <% @requests.each do |request| %>
       <tr>
@@ -23,7 +25,14 @@
         <td> <%= request.approved %> </td>
         <td> <%= request.requested - request.approved %> </td>
         <td>
-          <%= form_tag(:action => 'approve') do %>
+          <% if request.allotted > 0 %>
+            <%= request.allotted %>
+          <% else %>
+            -
+          <% end %>
+        </td>
+        <td>
+          <%= form_tag(:action => 'approvebyitem') do %>
             <%= number_field_tag('toApprove', params[:toApprove], :placeholder => 'Number to approve') %>
             <%= hidden_field_tag('team_id', params[:team_id] = request.team_id) %>
             <%= hidden_field_tag('item_id', params[:item_id] = request.item_id) %>
@@ -32,12 +41,23 @@
           <% end %>
         </td>
         <td>
-          <%= form_tag(:action => 'return') do %>
+          <%= form_tag(:action => 'returnbyitem') do %>
             <%= number_field_tag('toReturn', params[:toReturn], :placeholder => 'Number to return') %>
             <%= hidden_field_tag('team_id', params[:team_id] = request.team_id) %>
             <%= hidden_field_tag('item_id', params[:item_id] = request.item_id) %>
             <%= hidden_field_tag('request_id', params[:request_id] = request.id) %>
             <%= submit_tag('Return') %>
+          <% end %>
+        </td>
+        <td>
+          <% if request.allotted < 1 %>
+            <%= form_tag(:action => 'allotbyitem') do %>
+              <%= number_field_tag('toAllot', params[:toAllot], :placeholder => 'Number to allot') %>
+              <%= hidden_field_tag('team_id', params[:team_id] = request.team_id) %>
+              <%= hidden_field_tag('item_id', params[:item_id] = request.item_id) %>
+              <%= hidden_field_tag('request_id', params[:request_id] = request.id) %>
+              <%= submit_tag('Allot') %>
+            <% end %>
           <% end %>
         </td>
       </tr>

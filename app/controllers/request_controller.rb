@@ -73,6 +73,7 @@ class RequestController < ApplicationController
         req.item_id = @id.id
         req.requested = item.count
         req.approved = 0
+        req.allotted = 0
         req.save
         #else
         #	@req=Request.where("user_id = #{session[:user_id]} and item_id=#{id.id}")
@@ -88,6 +89,7 @@ class RequestController < ApplicationController
         log.item_id = @id.id
         log.requested = item.count
         log.approved = 0
+        log.allotted = 0
         log.status = "pending"
         log.save
 

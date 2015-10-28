@@ -6,6 +6,7 @@ class ItemsController < ApplicationController
     @item.item_total = Integer(params[:item_total])
     @item.item_requested = 0
     @item.item_approved = 0
+    @item.item_alloted = 0
     @item.item_remaining = params[:item_total]
     @item.save
 
@@ -64,11 +65,11 @@ class ItemsController < ApplicationController
     @item = Item.find(params[:item_id])
   end
 
-  def approve
+  def approvebyitem
     @item = Item.find_by_id(params[:item_id])
     @request = Request.find_by_id(params[:request_id])
     @log = Log.where( "request_id = #{params[:request_id]} and item_id = #{params[:item_id]} and team_id = #{params[:team_id]}").first;
-    if Integer(params[:toApprove]) <= Integer(@item.item_remaining) and Integer(params[:toApprove]) <= @request.requested
+    if Integer(params[:toApprove]) <= Integer(@item.item_remaining) and Integer(params[:toApprove]) <= @request.requested and Integer(params[:toApprove]) <= (@request.requested-@request.approved)
       @request.approved = @request.approved + Integer(params[:toApprove])
       @item.item_remaining = @item.item_remaining - Integer(params[:toApprove])
       @item.item_approved = @item.item_approved + Integer(params[:toApprove])
@@ -93,7 +94,37 @@ class ItemsController < ApplicationController
     redirect_to('/items/list_by_item?item_id=' + params[:item_id]);
   end
 
-  def return
+
+  def approvebyteam
+    @item = Item.find_by_id(params[:item_id])
+    @request = Request.find_by_id(params[:request_id])
+    @log = Log.where( "request_id = #{params[:request_id]} and item_id = #{params[:item_id]} and team_id = #{params[:team_id]}").first;
+    if Integer(params[:toApprove]) <= Integer(@item.item_remaining) and Integer(params[:toApprove]) <= @request.requested and Integer(params[:toApprove]) <= (@request.requested-@request.approved)
+      @request.approved = @request.approved + Integer(params[:toApprove])
+      @item.item_remaining = @item.item_remaining - Integer(params[:toApprove])
+      @item.item_approved = @item.item_approved + Integer(params[:toApprove])
+      @log.requested = @request.requested
+      @log.approved = @request.approved
+      if @request.approved == @request.requested
+         @log.status = 'Approved'
+       elsif @request.approved < @request.requested
+         @log.status = 'Pending'
+       elsif @request.requested == 0
+         @log.status = 'Returned'
+       end
+    elsif Integer(params[:toApprove]) > Integer(@item.item_remaining)
+       flash[:notice] = "Cannot approve more than remaining items"
+     else
+       flash[:notice] = "Cannot approve more than requested"
+    end
+    # @log.save
+    @request.save
+    @item.save
+    @log.save
+    redirect_to('/items/list_by_item?item_id=' + params[:item_id]);
+  end
+
+  def returnbyitem
     @item = Item.find_by_id(params[:item_id])
     @request = Request.find_by_id(params[:request_id])
     @log = Log.where( "request_id = #{params[:request_id]} and item_id = #{params[:item_id]} and team_id = #{params[:team_id]}").first;
@@ -104,7 +135,7 @@ class ItemsController < ApplicationController
 	  @item.item_requested = @item.item_requested - Integer(params[:toReturn])
     #@log.requested = @request.requested
     #@log.approved = @request.approved
-    if @request.approved == @request.requested
+    if @request.approved == @request.requested and @request.requested != 0
       @log.status = 'Approved'
     elsif @request.approved < @request.requested
       @log.status = 'Pending'
@@ -114,18 +145,67 @@ class ItemsController < ApplicationController
     @log.save
     @request.save
     @item.save
+      redirect_to('/items/list_by_item?item_id=' + params[:item_id]);
   end
 
-  def allot
-    @num = Integer(params[:num])
+  def returnbyteam
     @item = Item.find_by_id(params[:item_id])
     @request = Request.find_by_id(params[:request_id])
-    if @num >= @request.requested
+    @log = Log.where( "request_id = #{params[:request_id]} and item_id = #{params[:item_id]} and team_id = #{params[:team_id]}").first;
+    @request.requested = @request.requested - Integer(params[:toReturn])
+    @request.approved = @request.approved - Integer(params[:toReturn])
+    @item.item_remaining = @item.item_remaining + Integer(params[:toReturn])
+    @item.item_approved = @item.item_approved - Integer(params[:toReturn])
+    @item.item_requested = @item.item_requested - Integer(params[:toReturn])
+    #@log.requested = @request.requested
+    #@log.approved = @request.approved
+    if @request.approved == @request.requested and @request.requested != 0
+      @log.status = 'Approved'
+    elsif @request.approved < @request.requested
+      @log.status = 'Pending'
+    elsif @request.requested == 0
+      @log.status = 'Returned'
+    end
+    @log.save
+    @request.save
+    @item.save
+      redirect_to('/items/list_by_item?item_id=' + params[:item_id]);
+  end
+
+
+
+  def allotbyteam
+    @num = Integer(params[:toAllot])
+    @item = Item.find_by_id(params[:item_id])
+    @request = Request.find_by_id(params[:request_id])
+    @log = Log.where( "request_id = #{params[:request_id]} and item_id = #{params[:item_id]} and team_id = #{params[:team_id]}").first;
+    if @num <= @request.requested and @num <= @item.item_remaining
       @request.allotted = @num
-      @item.item_total_allotted = @item.item_total_allotted + @num
+      @item.item_alloted = @item.item_alloted + @num
+      @request.requested = @num
+      @log.allotted = @num
     end
     @request.save
     @item.save
+    @log.save
+    redirect_to('/items/list_by_team?team_id=' + params[:team_id]);
+  end
+
+  def allotbyitem
+    @num = Integer(params[:toAllot])
+    @item = Item.find_by_id(params[:item_id])
+    @request = Request.find_by_id(params[:request_id])
+    @log = Log.where( "request_id = #{params[:request_id]} and item_id = #{params[:item_id]} and team_id = #{params[:team_id]}").first;
+    if @num <= @request.requested and @num <= @item.item_remaining
+      @request.allotted = @num
+      @item.item_alloted = @item.item_alloted + @num
+      @request.requested = @num
+      @log.allotted = @num
+    end
+    @request.save
+    @item.save
+    @log.save
+    redirect_to('/items/list_by_item?item_id=' + params[:item_id]);
   end
 
   def total
